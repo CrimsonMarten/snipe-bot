@@ -19,4 +19,20 @@ def scrape(crn):
     reg_table = oscar_soup.find('caption', string='Registration Availability').find_parent('table')
     reg_data = [int(x.getText()) for x in reg_table.findAll('td', class_='dddefault')]
     return reg_data
-    
+
+def class_status(reg_data):
+    """
+    Returns class registration status, that is, "Open", "Open Waitlist", "Closed".
+
+    Keyword arguments:
+    reg_data -- list containing registration data obtained from oscar_scraper() function
+    """
+
+    s_cap, s_act, s_rem, w_cap, w_act, w_rem = reg_data
+
+    if w_cap > 0:
+        return "Open Waitlist" if w_rem > 0 else "Closed"
+    elif s_rem > 0:
+        return "Open"
+    else:
+        return "Closed"
