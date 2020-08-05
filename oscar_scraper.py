@@ -17,6 +17,10 @@ def scrape(crn):
 
     # Parse HTML for registration data
     reg_table = oscar_soup.find('caption', string='Registration Availability').find_parent('table')
+
+    if len(reg_table) == 0:
+        raise ValueError()
+
     reg_data = [int(x.getText()) for x in reg_table.findAll('td', class_='dddefault')]
     return reg_data
 
@@ -36,4 +40,4 @@ def class_status(reg_data):
     elif s_rem > 0:
         return "Open"
     else:
-        return "Closed"
+        return "Closed"    
