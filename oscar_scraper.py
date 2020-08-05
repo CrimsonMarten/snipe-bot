@@ -20,6 +20,7 @@ def scrape(crn):
     reg_data = [int(x.getText()) for x in reg_table.findAll('td', class_='dddefault')]
     return reg_data
 
+
 def class_status(reg_data):
     """
     Returns class registration status, that is, "Open", "Open Waitlist", "Closed".
