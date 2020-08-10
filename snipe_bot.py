@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 # Usage $<track/untrack> <CRN>
 
 import discord
@@ -34,12 +36,11 @@ async def on_ready():
 @client.command()
 async def track(ctx, crn):
     try:
-        reg_data = scrape(crn)
-        status = class_status(reg_data)
+        reg_data = await scrape(crn)
+        status = await class_status(reg_data)
         add_class(ctx.author, crn)
         current_class_status[crn] = status
         await ctx.send(f'{ctx.author.mention} Now tracking {crn}.')
-        print(tracking)
     except:
         await ctx.send(f'{ctx.author.mention} Could not find class with CRN: {crn}.')
 
@@ -52,7 +53,7 @@ async def untrack(ctx, crn):
     else:
         await ctx.send(f'{ctx.author.mention} You are not tracking {crn}. Did you mean "track"?')
 
-
+"""
 async def check_for_status_changes():
     changed_status = {}
     for crn in tracking:
@@ -65,15 +66,14 @@ async def check_for_status_changes():
 
 @tasks.loop(minutes=1.0)
 async def check_status_and_notify():
-    print('1')
     changed_status = check_for_status_changes()
     for crn in changed_status:
         for user in tracking[crn]:
             user.send("Class %s changed from %s to %s.", crn,
                       changed_status[crn], current_class_status[crn])
-
-client.run('TOKEN')
+"""
+client.run('NzQwNTAxNDA2NzE2Mzk1NjAw.Xyp7rQ.lVkEajhRHiHeowHrOmkNzzIFEXI')
 
 
 # TODO: Automatically untrack after 72 hours.
-# 4 course limit per person.
+# TODO: 4 course limit per person.

@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 import aiohttp, bs4
 
 async def scrape(crn):
@@ -13,7 +15,7 @@ async def scrape(crn):
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             # Download source code
-            oscar_soup = bs4.BeautifulSoup(resp.text(), features='html.parser')
+            oscar_soup = bs4.BeautifulSoup(await resp.text(), features='html.parser')
 
             # Parse HTML for registration data
             reg_table = oscar_soup.find('caption', string='Registration Availability').find_parent('table')
