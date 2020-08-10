@@ -4,6 +4,7 @@ import discord
 from oscar_scraper import *
 from discord.ext import commands, tasks
 import aiohttp
+import asyncio
 
 def add_class(user, crn):
     """
@@ -21,7 +22,7 @@ def remove_class(user, crn):
         del tracking[crn]
 
 tracking = {}
-class_status = {}
+current_class_status = {}
 
 client = commands.Bot(command_prefix='$')
 
@@ -33,10 +34,12 @@ async def on_ready():
 @client.command()
 async def track(ctx, crn):
     try:
-        status = class_status(scrape(crn))
+        reg_data = scrape(crn)
+        status = class_status(reg_data)
         add_class(ctx.author, crn)
-        class_status[crn] = status
+        current_class_status[crn] = status
         await ctx.send(f'{ctx.author.mention} Now tracking {crn}.')
+        print(tracking)
     except:
         await ctx.send(f'{ctx.author.mention} Could not find class with CRN: {crn}.')
 
@@ -50,24 +53,27 @@ async def untrack(ctx, crn):
         await ctx.send(f'{ctx.author.mention} You are not tracking {crn}. Did you mean "track"?')
 
 
-def check_for_status_changes():
+async def check_for_status_changes():
     changed_status = {}
     for crn in tracking:
         status = class_status(scrape(crn))
-        if status != class_status[crn]:
-            changed_status[crn] = class_status[crn]
-            class_status[crn] = status
+        if status != current_class_status[crn]:
+            changed_status[crn] = current_class_status[crn]
+            current_class_status[crn] = status
     return changed_status
 
 
-@tasks.loop(minutes=5.0)
+@tasks.loop(minutes=1.0)
 async def check_status_and_notify():
+    print('1')
     changed_status = check_for_status_changes()
     for crn in changed_status:
         for user in tracking[crn]:
             user.send("Class %s changed from %s to %s.", crn,
-                      changed_status[crn], class_status[crn])
+                      changed_status[crn], current_class_status[crn])
 
-client.run('your-token-here')
+client.run('TOKEN')
 
-    
+
+# TODO: Automatically untrack after 72 hours.
+# 4 course limit per person.

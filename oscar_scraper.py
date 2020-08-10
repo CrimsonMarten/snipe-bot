@@ -9,7 +9,7 @@ async def scrape(crn):
     """
     # Download class information using CRN
     url = 'https://oscar.gatech.edu/pls/bprod/bwckschd.p_disp_detail_sched?term_in=202008&crn_in=' + crn
-    
+
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
             # Download source code
@@ -25,7 +25,7 @@ async def scrape(crn):
             return reg_data
 
 
-def class_status(reg_data):
+async def class_status(reg_data):
     """
     Returns class registration status, that is, "Open", "Open Waitlist", "Closed".
 
