@@ -6,6 +6,7 @@ import discord, asyncio, aiohttp
 from oscar_scraper import *
 from discord.ext import commands, tasks
 
+
 def add_class(user, crn):
     """
     Precondition: crn is validated
@@ -25,6 +26,11 @@ tracking = {}
 current_class_status = {}
 
 client = commands.Bot(command_prefix='$')
+
+
+@client.event
+async def on_ready():
+    check_status_and_notify.start()
 
 
 @client.command()
@@ -47,7 +53,7 @@ async def untrack(ctx, crn):
     else:
         await ctx.send(f'{ctx.author.mention} You are not tracking {crn}. Did you mean "track"?')
 
-"""
+
 async def check_for_status_changes():
     changed_status = {}
     for crn in tracking:
@@ -60,12 +66,13 @@ async def check_for_status_changes():
 
 @tasks.loop(minutes=1.0)
 async def check_status_and_notify():
-    changed_status = check_for_status_changes()
+    changed_status = await check_for_status_changes()
     for crn in changed_status:
         for user in tracking[crn]:
-            user.send("Class %s changed from %s to %s.", crn,
-                      changed_status[crn], current_class_status[crn])
-"""
+            await user.send('Class %s changed from %s to %s.' % (crn,
+                      changed_status[crn], current_class_status[crn]))
+
+
 client.run('token')
 
 
