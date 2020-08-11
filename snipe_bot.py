@@ -2,11 +2,9 @@
 
 # Usage $<track/untrack> <CRN>
 
-import discord
+import discord, asyncio, aiohttp
 from oscar_scraper import *
 from discord.ext import commands, tasks
-import aiohttp
-import asyncio
 
 def add_class(user, crn):
     """
@@ -27,10 +25,6 @@ tracking = {}
 current_class_status = {}
 
 client = commands.Bot(command_prefix='$')
-
-@client.event
-async def on_ready():
-    print('Bot is ready.')
 
 
 @client.command()
@@ -72,7 +66,7 @@ async def check_status_and_notify():
             user.send("Class %s changed from %s to %s.", crn,
                       changed_status[crn], current_class_status[crn])
 """
-client.run('NzQwNTAxNDA2NzE2Mzk1NjAw.Xyp7rQ.lVkEajhRHiHeowHrOmkNzzIFEXI')
+client.run('token')
 
 
 # TODO: Automatically untrack after 72 hours.

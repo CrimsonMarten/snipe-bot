@@ -42,4 +42,5 @@ async def class_status(reg_data):
     elif s_rem > 0:
         return "Open"
     else:
-        return "Closed"    
+        return "Closed"
+ 
