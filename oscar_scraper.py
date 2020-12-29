@@ -10,7 +10,7 @@ async def scrape(crn):
     crn -- CRN for the class
     """
     # Download class information using CRN
-    url = 'https://oscar.gatech.edu/pls/bprod/bwckschd.p_disp_detail_sched?term_in=202008&crn_in=' + crn
+    url = 'https://oscar.gatech.edu/pls/bprod/bwckschd.p_disp_detail_sched?term_in=202102&crn_in=' + crn
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as resp:
